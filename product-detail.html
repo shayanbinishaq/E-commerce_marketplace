@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Detail - Brand</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<style>
+.page-body { padding:20px 0 40px; }
+.breadcrumb { font-size:13px; color:#888; margin-bottom:16px; }
+.breadcrumb span { color:#0d6efd; cursor:pointer; }
+.breadcrumb i { font-size:10px; margin:0 4px; }
+
+/* Product detail card */
+.product-detail-card { background:#fff; border:1px solid #eee; border-radius:6px; padding:24px; display:flex; gap:24px; }
+.product-images { width:280px; min-width:260px; }
+.main-img { width:100%; height:260px; object-fit:contain; border:1px solid #eee; border-radius:6px; margin-bottom:12px; background:#f8f8f8; }
+.thumb-row { display:flex; gap:8px; }
+.thumb { width:46px; height:46px; object-fit:cover; border:2px solid #eee; border-radius:4px; cursor:pointer; }
+.thumb.active { border-color:#0d6efd; }
+.product-info { flex:1; }
+.in-stock { color:#2e7d32; font-size:13px; font-weight:600; margin-bottom:8px; }
+.in-stock i { margin-right:4px; }
+.product-info h1 { font-size:19px; font-weight:700; line-height:1.3; margin-bottom:10px; }
+.rating-row { display:flex; align-items:center; gap:10px; font-size:13px; color:#888; margin-bottom:16px; }
+.stars { color:#f5a623; }
+.rating-score { font-weight:700; color:#333; }
+.price-tiers { display:flex; gap:0; border:1px solid #eee; border-radius:4px; overflow:hidden; margin-bottom:16px; }
+.price-tier { flex:1; padding:10px 14px; text-align:center; border-right:1px solid #eee; }
+.price-tier:last-child { border-right:none; }
+.price-tier .tier-price { font-size:16px; font-weight:700; color:#e53935; }
+.price-tier .tier-qty { font-size:11px; color:#888; margin-top:2px; }
+.price-tier.highlight { background:#fff8e1; }
+.spec-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:16px; }
+.spec-table tr { border-bottom:1px solid #f0f0f0; }
+.spec-table td { padding:8px 12px; }
+.spec-table td:first-child { color:#888; width:130px; }
+.features-list { list-style:none; font-size:13px; color:#555; }
+.features-list li { padding:4px 0; }
+.features-list li::before { content:"✓"; color:#2e7d32; margin-right:8px; }
+
+/* Supplier card */
+.supplier-card-box { width:220px; min-width:200px; }
+.supplier-info { background:#fff; border:1px solid #eee; border-radius:6px; padding:16px; margin-bottom:14px; }
+.supplier-avatar { width:40px; height:40px; background:#e3f2fd; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; color:#0d6efd; margin-bottom:8px; }
+.supplier-name { font-size:13px; font-weight:700; margin-bottom:4px; }
+.supplier-meta { font-size:12px; color:#888; margin-bottom:4px; display:flex; align-items:center; gap:6px; }
+.supplier-meta img { height:14px; }
+.verified { color:#2e7d32; font-size:12px; }
+.worldwide { color:#555; font-size:12px; }
+.btn-inquiry { display:block; width:100%; background:#0d6efd; color:#fff; border:none; padding:10px; border-radius:4px; font-size:13px; font-weight:600; cursor:pointer; margin-bottom:8px; text-align:center; }
+.btn-profile { display:block; width:100%; background:#fff; color:#0d6efd; border:1px solid #0d6efd; padding:9px; border-radius:4px; font-size:13px; cursor:pointer; text-align:center; }
+.btn-save-later { display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px; color:#888; cursor:pointer; margin-top:12px; }
+
+/* Tabs */
+.tabs-section { background:#fff; border:1px solid #eee; border-radius:6px; margin-top:16px; display:flex; gap:0; }
+.tabs-main { flex:1; padding:20px 24px; }
+.tabs-aside { width:220px; min-width:200px; border-left:1px solid #eee; padding:16px; }
+.tab-nav { display:flex; gap:0; border-bottom:2px solid #eee; margin-bottom:16px; }
+.tab-btn { padding:10px 18px; font-size:13px; cursor:pointer; border:none; background:none; color:#888; border-bottom:2px solid transparent; margin-bottom:-2px; }
+.tab-btn.active { color:#0d6efd; border-bottom-color:#0d6efd; font-weight:600; }
+.desc-text { font-size:13px; color:#555; line-height:1.7; margin-bottom:16px; }
+.spec-grid { display:grid; grid-template-columns:1fr 1fr; border:1px solid #eee; border-radius:4px; overflow:hidden; font-size:13px; margin-bottom:16px; }
+.spec-grid-row { display:contents; }
+.spec-grid-row > div { padding:9px 14px; border-bottom:1px solid #f0f0f0; border-right:1px solid #f0f0f0; }
+.spec-grid-row > div:nth-child(1) { color:#888; }
+.you-may-like h4 { font-size:13px; font-weight:700; margin-bottom:12px; }
+.like-item { display:flex; gap:10px; margin-bottom:12px; cursor:pointer; }
+.like-item img { width:50px; height:50px; object-fit:cover; border-radius:4px; border:1px solid #eee; flex-shrink:0; }
+.like-item-info p { font-size:12px; font-weight:600; color:#333; }
+.like-item-info small { font-size:11px; color:#888; }
+
+/* Related products */
+.related-section { background:#fff; border:1px solid #eee; border-radius:6px; margin-top:16px; padding:20px 24px; }
+.related-section h3 { font-size:15px; font-weight:700; margin-bottom:14px; }
+.related-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+.related-card { border:1px solid #eee; border-radius:6px; overflow:hidden; cursor:pointer; }
+.related-card img { width:100%; height:100px; object-fit:cover; }
+.related-card-body { padding:8px; }
+.related-card-body p { font-size:11px; color:#333; margin-bottom:3px; }
+.related-card-body small { font-size:11px; color:#888; }
+
+.promo-banner { background:linear-gradient(135deg,#1565c0,#1e88e5); border-radius:6px; padding:24px 32px; margin-top:16px; display:flex; justify-content:space-between; align-items:center; }
+.promo-banner h3 { font-size:17px; font-weight:700; color:#fff; }
+.promo-banner p { font-size:13px; color:rgba(255,255,255,0.8); margin-top:4px; }
+.btn-shop-now { background:#ff9800; color:#fff; border:none; padding:12px 24px; border-radius:4px; font-size:14px; font-weight:600; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="top-header">
+    <div class="container header-flex">
+      <a class="logo" href="index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-store" style="font-size:22px;color:#0d6efd;"></i><span style="color:#0d6efd;">Brand</span></a>
+      <div class="search-bar">
+        <input type="text" placeholder="Search">
+        <select><option>All category</option></select>
+        <button onclick="location.href='list-view.html'">Search</button>
+      </div>
+      <div class="header-icons">
+        <div class="icon-item"><i class="fa-regular fa-user"></i> Profile</div>
+        <div class="icon-item"><i class="fa-regular fa-envelope"></i> Message</div>
+        <div class="icon-item"><i class="fa-solid fa-box"></i> Orders</div>
+        <a class="icon-item" href="cart.html" style="text-decoration:none;color:inherit;"><i class="fa-solid fa-cart-shopping"></i> My cart</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <div class="container nav-flex">
+      <ul class="nav-left">
+        <li><a href="index.html" style="text-decoration:none;color:inherit;"><i class="fa-solid fa-bars"></i> All category</a></li>
+        <li><a href="list-view.html" style="text-decoration:none;color:inherit;">Hot offers</a></li><li><a href="list-view.html" style="text-decoration:none;color:inherit;">Gift boxes</a></li><li><a href="list-view.html" style="text-decoration:none;color:inherit;">Projects</a></li><li><a href="list-view.html" style="text-decoration:none;color:inherit;">Menu item</a></li>
+        <li>Help <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i></li>
+      </ul>
+      <div class="nav-right">
+        <span>English, USD</span>
+        <span>Ship to <img src="https://flagcdn.com/w20/de.png" style="height:12px;vertical-align:middle;margin-left:4px;"></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page-body">
+<div class="container">
+
+  <div class="breadcrumb">
+    <span onclick="location.href='index.html'" style="cursor:pointer;">Home</span> <i class="fa-solid fa-chevron-right"></i>
+    <span onclick="location.href='list-view.html'" style="cursor:pointer;">Clothings</span> <i class="fa-solid fa-chevron-right"></i>
+    <span onclick="location.href='list-view.html'" style="cursor:pointer;">Men's wear</span> <i class="fa-solid fa-chevron-right"></i>
+    Summer clothing
+  </div>
+
+  <!-- Main product card -->
+  <div class="product-detail-card">
+    <!-- Images -->
+    <div class="product-images">
+      <img class="main-img" src="https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400&q=80" alt="product">
+      <div class="thumb-row">
+        <img class="thumb active" src="https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=80&q=80">
+        <img class="thumb" src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=80&q=80">
+        <img class="thumb" src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=80&q=80">
+        <img class="thumb" src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=80&q=80">
+        <img class="thumb" src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=80&q=80">
+        <img class="thumb" src="https://images.unsplash.com/photo-1562157873-818bc0726f68?w=80&q=80">
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="product-info">
+      <p class="in-stock"><i class="fa-solid fa-check"></i> In stock</p>
+      <h1>Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle</h1>
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span class="rating-score">9.3</span>
+        <span><i class="fa-regular fa-comment"></i> 32 reviews</span>
+        <span><i class="fa-regular fa-heart"></i> 154 sold</span>
+      </div>
+      <div class="price-tiers">
+        <div class="price-tier highlight"><div class="tier-price">$98.00</div><div class="tier-qty">50-100 pcs</div></div>
+        <div class="price-tier"><div class="tier-price" style="color:#555;">$90.00</div><div class="tier-qty">100-700 pcs</div></div>
+        <div class="price-tier"><div class="tier-price" style="color:#555;">$78.00</div><div class="tier-qty">700+ pcs</div></div>
+      </div>
+      <table class="spec-table">
+        <tr><td>Price:</td><td>Negotiable</td></tr>
+        <tr><td>Type:</td><td>Classic shoes</td></tr>
+        <tr><td>Material:</td><td>Plastic material</td></tr>
+        <tr><td>Design:</td><td>Modern nice</td></tr>
+        <tr><td>Customization:</td><td>Customized logo and design custom packages</td></tr>
+        <tr><td>Protection:</td><td>Refund Policy</td></tr>
+        <tr><td>Warranty:</td><td>2 years full warranty</td></tr>
+      </table>
+    </div>
+
+    <!-- Supplier -->
+    <div class="supplier-card-box">
+      <div class="supplier-info">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <div class="supplier-avatar">R</div>
+          <div>
+            <p style="font-size:11px;color:#888;">Supplier</p>
+            <p class="supplier-name">Guanjoi Trading LLC</p>
+          </div>
+        </div>
+        <div class="supplier-meta"><img src="https://flagcdn.com/w20/de.png"> Germany, Berlin</div>
+        <div class="verified"><i class="fa-solid fa-circle-check"></i> Verified Seller</div>
+        <div class="worldwide" style="margin-top:4px;"><i class="fa-solid fa-globe"></i> Worldwide shipping</div>
+      </div>
+      <button class="btn-inquiry" onclick="location.href='cart.html'">Send inquiry</button>
+      <button class="btn-profile">Seller's profile</button>
+      <div class="btn-save-later" onclick="location.href='cart.html'"><i class="fa-regular fa-heart"></i> Save for later</div>
+    </div>
+  </div>
+
+  <!-- Tabs + You may like -->
+  <div class="tabs-section">
+    <div class="tabs-main">
+      <div class="tab-nav">
+        <button class="tab-btn active">Description</button>
+        <button class="tab-btn">Reviews</button>
+        <button class="tab-btn">Shipping</button>
+        <button class="tab-btn">About seller</button>
+      </div>
+      <p class="desc-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</p>
+      <p class="desc-text">Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+      <div class="spec-grid">
+        <div class="spec-grid-row"><div>Model</div><div>#8786867</div></div>
+        <div class="spec-grid-row"><div>Style</div><div>Classic style</div></div>
+        <div class="spec-grid-row"><div>Certificate</div><div>ISO-898921212</div></div>
+        <div class="spec-grid-row"><div>Size</div><div>34mm x 450mm x 19mm</div></div>
+        <div class="spec-grid-row"><div>Memory</div><div>36GB RAM</div></div>
+      </div>
+      <ul class="features-list">
+        <li>Some great feature name here</li>
+        <li>Lorem ipsum dolor sit amet, consectetur</li>
+        <li>Duis aute irure dolor in reprehenderit</li>
+        <li>Some great feature name here</li>
+      </ul>
+    </div>
+    <div class="tabs-aside">
+      <div class="you-may-like">
+        <h4>You may like</h4>
+        <div class="like-item" onclick="location.href='product-detail.html'" style="cursor:pointer;"><img src="https://images.unsplash.com/photo-1594938298603-c8148c4b4f7b?w=80&q=80"><div class="like-item-info"><p>Men Blazers Sets Elegant Formal</p><small>$7.00 – $99.50</small></div></div>
+        <div class="like-item" onclick="location.href='product-detail.html'" style="cursor:pointer;"><img src="https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=80&q=80"><div class="like-item-info"><p>Men Shirt Sleeve Polo Contrast</p><small>$7.00 – $99.50</small></div></div>
+        <div class="like-item" onclick="location.href='product-detail.html'" style="cursor:pointer;"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&q=80"><div class="like-item-info"><p>Apple Watch Series Space Gray</p><small>$7.00 – $99.50</small></div></div>
+        <div class="like-item" onclick="location.href='product-detail.html'" style="cursor:pointer;"><img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=80&q=80"><div class="like-item-info"><p>Basketball Crew Socks Long Stuff</p><small>$7.00 – $99.50</small></div></div>
+        <div class="like-item" onclick="location.href='product-detail.html'" style="cursor:pointer;"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=80&q=80"><div class="like-item-info"><p>New Summer Men's castrol T-Shirts</p><small>$7.00 – $99.50</small></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related products -->
+  <div class="related-section">
+    <h3>Related products</h3>
+    <div class="related-grid">
+      <div class="related-card" onclick="location.href='product-detail.html'"><img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=200&q=80"><div class="related-card-body"><p>Xiaomi Redmi 8 Original</p><small>$32.00–$40.00</small></div></div>
+      <div class="related-card" onclick="location.href='product-detail.html'"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&q=80"><div class="related-card-body"><p>Xiaomi Redmi 8 Original</p><small>$32.00–$40.00</small></div></div>
+      <div class="related-card" onclick="location.href='product-detail.html'"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&q=80"><div class="related-card-body"><p>Xiaomi Redmi 8 Original</p><small>$32.00–$40.00</small></div></div>
+      <div class="related-card" onclick="location.href='product-detail.html'"><img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=200&q=80"><div class="related-card-body"><p>Xiaomi Redmi 8 Original</p><small>$32.00–$40.00</small></div></div>
+      <div class="related-card" onclick="location.href='product-detail.html'"><img src="https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=200&q=80"><div class="related-card-body"><p>Xiaomi Redmi 8 Original</p><small>$32.00–$40.00</small></div></div>
+      <div class="related-card" onclick="location.href='product-detail.html'"><img src="https://images.unsplash.com/photo-1567538096621-38d2284b23ff?w=200&q=80"><div class="related-card-body"><p>Xiaomi Redmi 8 Original</p><small>$32.00–$40.00</small></div></div>
+    </div>
+  </div>
+
+  <div class="promo-banner">
+    <div><h3>Super discount on more than 100 USD</h3><p>Have you ever finally just write dummy info</p></div>
+    <button class="btn-shop-now" onclick="location.href='list-view.html'">Shop now</button>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" style="text-decoration:none;display:flex;align-items:center;gap:8px;margin-bottom:10px;"><i class="fa-solid fa-store" style="font-size:20px;color:#0d6efd;"></i><span style="font-weight:700;color:#0d6efd;">Brand</span></a>
+      <p style="font-size:12px;color:#888;margin-bottom:12px;">Best information about the company<br>gies here but now lorem ipsum is</p>
+      <div class="social-icons"><i class="fa-brands fa-facebook-f"></i><i class="fa-brands fa-twitter"></i><i class="fa-brands fa-linkedin-in"></i><i class="fa-brands fa-instagram"></i><i class="fa-brands fa-youtube"></i></div>
+    </div>
+    <div class="footer-col"><h3>About</h3><ul><li>About Us</li><li>Find store</li><li>Categories</li><li>Blogs</li></ul></div>
+    <div class="footer-col"><h3>Partnership</h3><ul><li>About Us</li><li>Find store</li><li>Categories</li><li>Blogs</li></ul></div>
+    <div class="footer-col"><h3>Information</h3><ul><li>Help Center</li><li>Money Refund</li><li>Shipping</li><li>Contact us</li></ul></div>
+    <div class="footer-col"><h3>For users</h3><ul><li>Login</li><li>Register</li><li>Settings</li><li>My Orders</li></ul></div>
+    <div class="footer-col"><h3>Get app</h3><div class="app-badge"><i class="fa-brands fa-apple"></i> App Store</div><div class="app-badge"><i class="fa-brands fa-google-play"></i> Google Play</div></div>
+  </div>
+  <div class="footer-bottom"><div class="container" style="display:flex;justify-content:space-between;"><p style="font-size:13px;color:#888;">© 2023 Ecommerce.</p><div style="font-size:13px;color:#555;display:flex;align-items:center;gap:5px;"><img src="https://flagcdn.com/w20/us.png" style="height:13px;"> English ▲</div></div></div>
+</footer>
+</body>
+</html>

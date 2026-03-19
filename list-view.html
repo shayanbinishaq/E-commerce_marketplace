@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Results - Brand</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<style>
+.page-body { padding:20px 0 40px; }
+.breadcrumb { font-size:13px; color:#888; margin-bottom:16px; }
+.breadcrumb span { color:#0d6efd; cursor:pointer; }
+.breadcrumb i { font-size:10px; margin:0 4px; }
+
+.list-layout { display:flex; gap:20px; align-items:flex-start; }
+
+/* FILTER SIDEBAR */
+.filter-sidebar { width:210px; min-width:200px; background:#fff; border:1px solid #eee; border-radius:6px; padding:16px; }
+.filter-group { margin-bottom:18px; }
+.filter-group-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; cursor:pointer; }
+.filter-group-header h4 { font-size:13px; font-weight:700; }
+.filter-group-header i { font-size:11px; color:#888; }
+.filter-item { display:flex; align-items:center; gap:8px; font-size:13px; color:#333; margin-bottom:7px; cursor:pointer; }
+.filter-item input[type=checkbox], .filter-item input[type=radio] { accent-color:#0d6efd; width:14px; height:14px; cursor:pointer; }
+.see-all { font-size:12px; color:#0d6efd; cursor:pointer; display:block; margin-top:4px; }
+.filter-divider { border:none; border-top:1px solid #f0f0f0; margin:14px 0; }
+
+/* Price range slider */
+.price-range-wrap { margin-bottom:10px; }
+.price-range-wrap input[type=range] { width:100%; accent-color:#0d6efd; }
+.price-inputs { display:flex; gap:8px; margin-top:8px; }
+.price-inputs input { width:50%; padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:12px; }
+.btn-apply-filter { display:block; width:100%; padding:8px; background:#fff; border:1px solid #0d6efd; color:#0d6efd; border-radius:4px; font-size:13px; cursor:pointer; margin-top:8px; font-weight:600; }
+
+/* Stars filter */
+.star-filter { display:flex; align-items:center; gap:6px; margin-bottom:7px; cursor:pointer; }
+.star-filter input { accent-color:#0d6efd; width:14px; height:14px; }
+.star-filter .stars { color:#f5a623; font-size:13px; }
+
+/* MAIN RESULTS */
+.results-main { flex:1; }
+.results-toolbar { display:flex; justify-content:space-between; align-items:center; background:#fff; border:1px solid #eee; border-radius:6px; padding:10px 16px; margin-bottom:14px; }
+.results-count { font-size:13px; }
+.results-count strong { font-weight:700; }
+.toolbar-right { display:flex; align-items:center; gap:12px; }
+.verified-check { display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer; }
+.verified-check input { accent-color:#0d6efd; width:14px; height:14px; }
+.sort-select { padding:6px 10px; border:1px solid #ccc; border-radius:4px; font-size:13px; background:#fff; cursor:pointer; }
+.view-toggle { display:flex; gap:4px; }
+.view-btn { width:30px; height:30px; display:flex; align-items:center; justify-content:center; border:1px solid #ccc; border-radius:4px; cursor:pointer; background:#fff; color:#888; }
+.view-btn.active { background:#0d6efd; color:#fff; border-color:#0d6efd; }
+
+/* Product list items */
+.product-list-item { background:#fff; border:1px solid #eee; border-radius:6px; padding:16px; display:flex; gap:16px; margin-bottom:12px; position:relative; }
+.product-list-item img { width:180px; height:160px; object-fit:cover; border-radius:4px; flex-shrink:0; }
+.list-item-info { flex:1; }
+.list-item-info h3 { font-size:15px; font-weight:700; margin-bottom:8px; }
+.list-price { font-size:18px; font-weight:700; margin-bottom:4px; }
+.list-price .original { font-size:13px; color:#888; text-decoration:line-through; margin-left:8px; font-weight:400; }
+.list-rating { display:flex; align-items:center; gap:8px; font-size:13px; color:#888; margin-bottom:8px; }
+.list-rating .stars { color:#f5a623; }
+.list-rating .free-ship { color:#00897b; font-weight:600; }
+.list-desc { font-size:13px; color:#555; line-height:1.6; margin-bottom:10px; }
+.btn-view-details { font-size:13px; color:#0d6efd; background:none; border:none; cursor:pointer; padding:0; font-weight:600; }
+.btn-view-details:hover { text-decoration:underline; }
+.wishlist-btn { position:absolute; top:14px; right:14px; background:#fff; border:1px solid #eee; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#ccc; }
+.wishlist-btn:hover { color:#e53935; border-color:#e53935; }
+
+/* Pagination */
+.pagination { display:flex; justify-content:flex-end; align-items:center; gap:6px; margin-top:16px; }
+.page-show { display:flex; align-items:center; gap:8px; font-size:13px; margin-right:10px; }
+.page-show select { padding:5px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px; }
+.page-btn { width:32px; height:32px; display:flex; align-items:center; justify-content:center; border:1px solid #eee; border-radius:4px; cursor:pointer; font-size:13px; background:#fff; color:#333; }
+.page-btn.active { background:#0d6efd; color:#fff; border-color:#0d6efd; }
+.page-btn:hover:not(.active) { border-color:#0d6efd; color:#0d6efd; }
+
+.newsletter { margin-top:30px; background:#fff; border-radius:6px; border:1px solid #eee; padding:36px; text-align:center; }
+.newsletter h2 { font-size:17px; font-weight:700; }
+.newsletter-form { display:inline-flex; margin-top:16px; border:1px solid #ccc; border-radius:4px; overflow:hidden; }
+.newsletter-form .email-icon { display:flex; align-items:center; gap:6px; padding:0 14px; font-size:13px; color:#888; background:#fff; border-right:1px solid #eee; white-space:nowrap; }
+.newsletter-form input { padding:10px 12px; border:none; outline:none; font-size:13px; width:220px; }
+.newsletter-form button { padding:10px 22px; background:#0d6efd; color:#fff; border:none; cursor:pointer; font-size:13px; font-weight:600; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="top-header">
+    <div class="container header-flex">
+      <a class="logo" href="index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;"><i class="fa-solid fa-store" style="font-size:22px;color:#0d6efd;"></i><span style="color:#0d6efd;">Brand</span></a>
+      <div class="search-bar">
+        <input type="text" placeholder="Search">
+        <select><option>All category</option></select>
+        <button onclick="location.href='list-view.html'">Search</button>
+      </div>
+      <div class="header-icons">
+        <div class="icon-item"><i class="fa-regular fa-user"></i> Profile</div>
+        <div class="icon-item"><i class="fa-regular fa-envelope"></i> Message</div>
+        <div class="icon-item"><i class="fa-solid fa-box"></i> Orders</div>
+        <a class="icon-item" href="cart.html" style="text-decoration:none;color:inherit;"><i class="fa-solid fa-cart-shopping"></i> My cart</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <div class="container nav-flex">
+      <ul class="nav-left">
+        <li><a href="index.html" style="text-decoration:none;color:inherit;"><i class="fa-solid fa-bars"></i> All category</a></li>
+        <li><a href="list-view.html" style="text-decoration:none;color:inherit;">Hot offers</a></li><li><a href="list-view.html" style="text-decoration:none;color:inherit;">Gift boxes</a></li><li><a href="list-view.html" style="text-decoration:none;color:inherit;">Projects</a></li><li><a href="list-view.html" style="text-decoration:none;color:inherit;">Menu item</a></li>
+        <li>Help <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i></li>
+      </ul>
+      <div class="nav-right">
+        <span>English, USD</span>
+        <span>Ship to <img src="https://flagcdn.com/w20/de.png" style="height:12px;vertical-align:middle;margin-left:4px;"></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page-body">
+<div class="container">
+
+  <div class="breadcrumb">
+    <span onclick="location.href='index.html'" style="cursor:pointer;">Home</span> <i class="fa-solid fa-chevron-right"></i>
+    <span onclick="location.href='list-view.html'" style="cursor:pointer;">Clothings</span> <i class="fa-solid fa-chevron-right"></i>
+    <span onclick="location.href='list-view.html'" style="cursor:pointer;">Men's wear</span> <i class="fa-solid fa-chevron-right"></i>
+    Summer clothing
+  </div>
+
+  <div class="list-layout">
+
+    <!-- FILTER SIDEBAR -->
+    <div class="filter-sidebar">
+
+      <div class="filter-group">
+        <div class="filter-group-header"><h4>Category</h4><i class="fa-solid fa-chevron-up"></i></div>
+        <div class="filter-item">Mobile accessory</div>
+        <div class="filter-item">Electronics</div>
+        <div class="filter-item">Smartphones</div>
+        <div class="filter-item">Modern tech</div>
+        <a class="see-all">See all</a>
+      </div>
+      <hr class="filter-divider">
+
+      <div class="filter-group">
+        <div class="filter-group-header"><h4>Brands</h4><i class="fa-solid fa-chevron-up"></i></div>
+        <label class="filter-item"><input type="checkbox"> Samsung</label>
+        <label class="filter-item"><input type="checkbox"> Apple</label>
+        <label class="filter-item"><input type="checkbox"> Huawei</label>
+        <label class="filter-item"><input type="checkbox"> Pocco</label>
+        <label class="filter-item"><input type="checkbox"> Lenovo</label>
+        <a class="see-all">See all</a>
+      </div>
+      <hr class="filter-divider">
+
+      <div class="filter-group">
+        <div class="filter-group-header"><h4>Features</h4><i class="fa-solid fa-chevron-up"></i></div>
+        <label class="filter-item"><input type="checkbox"> Metallic</label>
+        <label class="filter-item"><input type="checkbox"> Plastic cover</label>
+        <label class="filter-item"><input type="checkbox"> 8GB Ram</label>
+        <label class="filter-item"><input type="checkbox"> Super power</label>
+        <label class="filter-item"><input type="checkbox"> Large Memory</label>
+        <a class="see-all">See all</a>
+      </div>
+      <hr class="filter-divider">
+
+      <div class="filter-group">
+        <div class="filter-group-header"><h4>Price range</h4><i class="fa-solid fa-chevron-up"></i></div>
+        <div class="price-range-wrap">
+          <input type="range" min="0" max="999999" value="400000">
+        </div>
+        <div class="price-inputs">
+          <input type="number" placeholder="Min" value="0">
+          <input type="number" placeholder="Max" value="999999">
+        </div>
+        <button class="btn-apply-filter">Apply</button>
+      </div>
+      <hr class="filter-divider">
+
+      <div class="filter-group">
+        <div class="filter-group-header"><h4>Condition</h4><i class="fa-solid fa-chevron-up"></i></div>
+        <label class="filter-item"><input type="radio" name="cond" checked> Any</label>
+        <label class="filter-item"><input type="radio" name="cond"> Refurbished</label>
+        <label class="filter-item"><input type="radio" name="cond"> Brand new</label>
+        <label class="filter-item"><input type="radio" name="cond"> Old items</label>
+      </div>
+      <hr class="filter-divider">
+
+      <div class="filter-group">
+        <div class="filter-group-header"><h4>Ratings</h4><i class="fa-solid fa-chevron-up"></i></div>
+        <label class="star-filter"><input type="checkbox"><span class="stars">★★★★★</span></label>
+        <label class="star-filter"><input type="checkbox"><span class="stars">★★★★</span><span style="color:#ccc;">★</span></label>
+        <label class="star-filter"><input type="checkbox"><span class="stars">★★★</span><span style="color:#ccc;">★★</span></label>
+        <label class="star-filter"><input type="checkbox"><span class="stars">★★</span><span style="color:#ccc;">★★★</span></label>
+      </div>
+
+    </div><!-- /filter-sidebar -->
+
+    <!-- MAIN RESULTS -->
+    <div class="results-main">
+
+      <div class="results-toolbar">
+        <p class="results-count">12,911 items in <strong>Mobile accessory</strong></p>
+        <div class="toolbar-right">
+          <label class="verified-check"><input type="checkbox" checked> Verified only</label>
+          <select class="sort-select"><option>Featured</option><option>Price: Low to High</option><option>Price: High to Low</option></select>
+          <div class="view-toggle">
+            <button class="view-btn"><i class="fa-solid fa-grip"></i></button>
+            <button class="view-btn active"><i class="fa-solid fa-list"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 1 -->
+      <div class="product-list-item" style="cursor:pointer;" onclick="location.href='product-detail.html'">
+        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&q=80" alt="">
+        <div class="list-item-info">
+          <h3>Canon Cmera EOS 2000, Black 10x zoom</h3>
+          <div class="list-price">$998.00 <span class="original">$1128.00</span></div>
+          <div class="list-rating">
+            <span class="stars">★★★★</span>
+            <span>7.5</span>
+            <span>•</span>
+            <span>154 orders</span>
+            <span>•</span>
+            <span class="free-ship">Free Shipping</span>
+          </div>
+          <p class="list-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+          <button class="btn-view-details" onclick="location.href='product-detail.html'">View details</button>
+        </div>
+        <button class="wishlist-btn" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="product-list-item" style="cursor:pointer;" onclick="location.href='product-detail.html'">
+        <img src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=300&q=80" alt="">
+        <div class="list-item-info">
+          <h3>GoPro HERO6 4K Action Camera - Black</h3>
+          <div class="list-price">$998.00</div>
+          <div class="list-rating">
+            <span class="stars">★★★★</span>
+            <span>7.5</span>
+            <span>•</span>
+            <span>154 orders</span>
+            <span>•</span>
+            <span class="free-ship">Free Shipping</span>
+          </div>
+          <p class="list-desc">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit</p>
+          <button class="btn-view-details" onclick="location.href='product-detail.html'">View details</button>
+        </div>
+        <button class="wishlist-btn" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="product-list-item" style="cursor:pointer;" onclick="location.href='product-detail.html'">
+        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&q=80" alt="">
+        <div class="list-item-info">
+          <h3>GoPro HERO6 4K Action Camera - Black</h3>
+          <div class="list-price">$998.00</div>
+          <div class="list-rating">
+            <span class="stars">★★★★</span>
+            <span>7.5</span>
+            <span>•</span>
+            <span>154 orders</span>
+            <span>•</span>
+            <span class="free-ship">Free Shipping</span>
+          </div>
+          <p class="list-desc">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit</p>
+          <button class="btn-view-details" onclick="location.href='product-detail.html'">View details</button>
+        </div>
+        <button class="wishlist-btn" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+      </div>
+
+      <!-- Product 4 -->
+      <div class="product-list-item" style="cursor:pointer;" onclick="location.href='product-detail.html'">
+        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&q=80" alt="">
+        <div class="list-item-info">
+          <h3>GoPro HERO6 4K Action Camera - Black</h3>
+          <div class="list-price">$998.00 <span class="original">$1128.00</span></div>
+          <div class="list-rating">
+            <span class="stars">★★★★</span>
+            <span>7.5</span>
+            <span>•</span>
+            <span>154 orders</span>
+            <span>•</span>
+            <span class="free-ship">Free Shipping</span>
+          </div>
+          <p class="list-desc">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit</p>
+          <button class="btn-view-details" onclick="location.href='product-detail.html'">View details</button>
+        </div>
+        <button class="wishlist-btn" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+      </div>
+
+      <!-- Product 5 -->
+      <div class="product-list-item" style="cursor:pointer;" onclick="location.href='product-detail.html'">
+        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=80" alt="">
+        <div class="list-item-info">
+          <h3>GoPro HERO6 4K Action Camera - Black</h3>
+          <div class="list-price">$998.00</div>
+          <div class="list-rating">
+            <span class="stars">★★★★</span>
+            <span>7.5</span>
+            <span>•</span>
+            <span>154 orders</span>
+            <span>•</span>
+            <span class="free-ship">Free Shipping</span>
+          </div>
+          <p class="list-desc">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit</p>
+          <button class="btn-view-details" onclick="location.href='product-detail.html'">View details</button>
+        </div>
+        <button class="wishlist-btn" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+      </div>
+
+      <!-- Product 6 -->
+      <div class="product-list-item" style="cursor:pointer;" onclick="location.href='product-detail.html'">
+        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80" alt="">
+        <div class="list-item-info">
+          <h3>GoPro HERO6 4K Action Camera - Black</h3>
+          <div class="list-price">$998.00</div>
+          <div class="list-rating">
+            <span class="stars">★★★★</span>
+            <span>7.5</span>
+            <span>•</span>
+            <span>154 orders</span>
+            <span>•</span>
+            <span class="free-ship">Free Shipping</span>
+          </div>
+          <p class="list-desc">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit</p>
+          <button class="btn-view-details" onclick="location.href='product-detail.html'">View details</button>
+        </div>
+        <button class="wishlist-btn" onclick="event.stopPropagation()"><i class="fa-regular fa-heart"></i></button>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <div class="page-show"><span>Show</span><select><option>10</option><option>20</option><option>50</option></select></div>
+        <button class="page-btn"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+
+    </div><!-- /results-main -->
+  </div><!-- /list-layout -->
+
+  <!-- Newsletter -->
+  <div class="newsletter">
+    <h2>Subscribe on our newsletter</h2>
+    <p style="color:#888;font-size:13px;margin:6px 0 0;">Get daily news on upcoming offers from many suppliers all over the world</p>
+    <div class="newsletter-form">
+      <span class="email-icon"><i class="fa-regular fa-envelope"></i> Email</span>
+      <input type="email" placeholder="">
+      <button>Subscribe</button>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" style="text-decoration:none;display:flex;align-items:center;gap:8px;margin-bottom:10px;"><i class="fa-solid fa-store" style="font-size:20px;color:#0d6efd;"></i><span style="font-weight:700;color:#0d6efd;">Brand</span></a>
+      <p style="font-size:12px;color:#888;margin-bottom:12px;">Best information about the company<br>gies here but now lorem ipsum is</p>
+      <div class="social-icons"><i class="fa-brands fa-facebook-f"></i><i class="fa-brands fa-twitter"></i><i class="fa-brands fa-linkedin-in"></i><i class="fa-brands fa-instagram"></i><i class="fa-brands fa-youtube"></i></div>
+    </div>
+    <div class="footer-col"><h3>About</h3><ul><li>About Us</li><li>Find store</li><li>Categories</li><li>Blogs</li></ul></div>
+    <div class="footer-col"><h3>Partnership</h3><ul><li>About Us</li><li>Find store</li><li>Categories</li><li>Blogs</li></ul></div>
+    <div class="footer-col"><h3>Information</h3><ul><li>Help Center</li><li>Money Refund</li><li>Shipping</li><li>Contact us</li></ul></div>
+    <div class="footer-col"><h3>For users</h3><ul><li>Login</li><li>Register</li><li>Settings</li><li>My Orders</li></ul></div>
+    <div class="footer-col"><h3>Get app</h3><div class="app-badge"><i class="fa-brands fa-apple"></i> App Store</div><div class="app-badge"><i class="fa-brands fa-google-play"></i> Google Play</div></div>
+  </div>
+  <div class="footer-bottom"><div class="container" style="display:flex;justify-content:space-between;"><p style="font-size:13px;color:#888;">© 2023 Ecommerce.</p><div style="font-size:13px;color:#555;display:flex;align-items:center;gap:5px;"><img src="https://flagcdn.com/w20/us.png" style="height:13px;"> English ▲</div></div></div>
+</footer>
+</body>
+</html>

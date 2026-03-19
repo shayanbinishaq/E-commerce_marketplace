@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Cart - Brand</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<style>
+.cart-header { background:#fff; padding:14px 0; border-bottom:1px solid #eee; }
+.page-body { padding: 24px 0 40px; }
+.cart-layout { display:flex; gap:20px; align-items:flex-start; }
+.cart-main { flex:1; }
+.cart-sidebar { width:300px; min-width:280px; }
+.cart-title { font-size:20px; font-weight:700; margin-bottom:16px; }
+.cart-items { background:#fff; border:1px solid #eee; border-radius:6px; overflow:hidden; }
+.cart-item { display:flex; align-items:flex-start; gap:14px; padding:16px; border-bottom:1px solid #f0f0f0; }
+.cart-item:last-child { border-bottom:none; }
+.cart-item img { width:80px; height:80px; object-fit:cover; border-radius:4px; border:1px solid #eee; flex-shrink:0; }
+.cart-item-info { flex:1; }
+.cart-item-info h4 { font-size:14px; font-weight:600; margin-bottom:4px; }
+.cart-item-info p { font-size:12px; color:#888; margin-bottom:2px; }
+.cart-item-info .seller { margin-bottom:10px; }
+.cart-item-actions { display:flex; gap:8px; }
+.btn-remove { font-size:12px; color:#e53935; border:1px solid #e53935; background:#fff; padding:4px 10px; border-radius:4px; cursor:pointer; }
+.btn-save { font-size:12px; color:#0d6efd; border:1px solid #0d6efd; background:#fff; padding:4px 10px; border-radius:4px; cursor:pointer; }
+.cart-item-right { display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+.cart-item-price { font-size:15px; font-weight:700; }
+.qty-select { padding:6px 10px; border:1px solid #ccc; border-radius:4px; font-size:13px; background:#fff; cursor:pointer; }
+.cart-bottom { display:flex; justify-content:space-between; align-items:center; margin-top:14px; }
+.btn-back { display:flex; align-items:center; gap:8px; background:#0d6efd; color:#fff; border:none; padding:10px 20px; border-radius:4px; font-size:13px; cursor:pointer; }
+.btn-remove-all { background:#fff; border:1px solid #ccc; color:#333; padding:10px 20px; border-radius:4px; font-size:13px; cursor:pointer; }
+.trust-badges { display:flex; gap:14px; margin-top:20px; }
+.trust-item { display:flex; align-items:center; gap:12px; background:#fff; border:1px solid #eee; border-radius:6px; padding:14px 18px; flex:1; }
+.trust-item i { font-size:24px; color:#bbb; }
+.trust-item h4 { font-size:13px; font-weight:600; margin-bottom:2px; }
+.trust-item p { font-size:11px; color:#888; }
+.saved-section { margin-top:20px; background:#fff; border:1px solid #eee; border-radius:6px; padding:16px; }
+.saved-section h3 { font-size:15px; font-weight:700; margin-bottom:14px; }
+.saved-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.saved-card { border:1px solid #eee; border-radius:6px; overflow:hidden; }
+.saved-card img { width:100%; height:150px; object-fit:cover; }
+.saved-card-body { padding:10px; }
+.saved-card-body .price { font-size:14px; font-weight:700; margin-bottom:4px; }
+.saved-card-body p { font-size:11px; color:#555; margin-bottom:10px; line-height:1.4; }
+.btn-move { display:flex; align-items:center; gap:6px; font-size:12px; color:#0d6efd; background:#fff; border:1px solid #0d6efd; padding:6px 12px; border-radius:4px; cursor:pointer; }
+.promo-banner { background:linear-gradient(135deg,#1565c0,#1e88e5); border-radius:6px; padding:24px 32px; margin-top:20px; display:flex; justify-content:space-between; align-items:center; }
+.promo-banner h3 { font-size:17px; font-weight:700; color:#fff; }
+.promo-banner p { font-size:13px; color:rgba(255,255,255,0.8); margin-top:4px; }
+.btn-shop-now { background:#ff9800; color:#fff; border:none; padding:12px 24px; border-radius:4px; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap; }
+.order-summary { background:#fff; border:1px solid #eee; border-radius:6px; padding:16px; }
+.coupon-row { display:flex; gap:8px; margin-bottom:14px; }
+.coupon-row input { flex:1; padding:8px 12px; border:1px solid #ccc; border-radius:4px; font-size:13px; outline:none; }
+.btn-apply { background:#fff; border:1px solid #0d6efd; color:#0d6efd; padding:8px 14px; border-radius:4px; font-size:13px; cursor:pointer; font-weight:600; }
+.summary-divider { border:none; border-top:1px solid #eee; margin:10px 0; }
+.summary-row { display:flex; justify-content:space-between; font-size:13px; padding:5px 0; }
+.summary-row.discount span:last-child { color:#e53935; }
+.summary-row.tax span:last-child { color:#00897b; }
+.summary-total { display:flex; justify-content:space-between; font-size:16px; font-weight:700; padding:10px 0 0; }
+.btn-checkout { display:block; width:100%; background:#00c853; color:#fff; border:none; padding:14px; border-radius:4px; font-size:15px; font-weight:700; cursor:pointer; margin-top:14px; }
+.payment-icons { display:flex; justify-content:center; gap:10px; margin-top:12px; }
+.payment-icons i { font-size:24px; color:#555; }
+</style>
+</head>
+<body>
+
+<header class="cart-header">
+  <div class="container header-flex">
+    <a class="logo" href="index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:6px;">
+      <i class="fa-solid fa-store" style="font-size:22px;color:#0d6efd;"></i>
+      <span style="color:#0d6efd;">Brand</span>
+    </a>
+    <div class="header-icons">
+      <div class="icon-item"><i class="fa-regular fa-user"></i> Profile</div>
+      <div class="icon-item"><i class="fa-regular fa-envelope"></i> Message</div>
+      <div class="icon-item"><i class="fa-regular fa-heart"></i> Orders</div>
+      <a class="icon-item" href="cart.html" style="text-decoration:none;color:inherit;"><i class="fa-solid fa-cart-shopping"></i> My cart</a>
+    </div>
+  </div>
+</header>
+
+<main class="page-body">
+<div class="container">
+  <h1 class="cart-title">My cart (3)</h1>
+  <div class="cart-layout">
+
+    <div class="cart-main">
+      <div class="cart-items">
+        <div class="cart-item">
+          <a href="product-detail.html"><img src="https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=160&q=80" alt="" style="cursor:pointer;"></a>
+          <div class="cart-item-info">
+            <h4><a href="product-detail.html" style="text-decoration:none;color:inherit;">T-shirts with multiple colors, for men and lady</a></h4>
+            <p>Size: medium, Color: blue,&nbsp; Material: Plastic</p>
+            <p class="seller">Seller: Artel Market</p>
+            <div class="cart-item-actions">
+              <button class="btn-remove">Remove</button>
+              <button class="btn-save">Save for later</button>
+            </div>
+          </div>
+          <div class="cart-item-right">
+            <span class="cart-item-price">$78.99</span>
+            <select class="qty-select"><option>Qty: 9 ▾</option></select>
+          </div>
+        </div>
+        <div class="cart-item">
+          <a href="product-detail.html"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=160&q=80" alt="" style="cursor:pointer;"></a>
+          <div class="cart-item-info">
+            <h4><a href="product-detail.html" style="text-decoration:none;color:inherit;">T-shirts with multiple colors, for men and lady</a></h4>
+            <p>Size: medium, Color: blue,&nbsp; Material: Plastic</p>
+            <p class="seller">Seller: Best factory LLC</p>
+            <div class="cart-item-actions">
+              <button class="btn-remove">Remove</button>
+              <button class="btn-save">Save for later</button>
+            </div>
+          </div>
+          <div class="cart-item-right">
+            <span class="cart-item-price">$39.00</span>
+            <select class="qty-select"><option>Qty: 3 ▾</option></select>
+          </div>
+        </div>
+        <div class="cart-item">
+          <a href="product-detail.html"><img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=160&q=80" alt="" style="cursor:pointer;"></a>
+          <div class="cart-item-info">
+            <h4><a href="product-detail.html" style="text-decoration:none;color:inherit;">T-shirts with multiple colors, for men and lady</a></h4>
+            <p>Size: medium, Color: blue,&nbsp; Material: Plastic</p>
+            <p class="seller">Seller: Artel Market</p>
+            <div class="cart-item-actions">
+              <button class="btn-remove">Remove</button>
+              <button class="btn-save">Save for later</button>
+            </div>
+          </div>
+          <div class="cart-item-right">
+            <span class="cart-item-price">$170.50</span>
+            <select class="qty-select"><option>Qty: 1 ▾</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="cart-bottom">
+        <button class="btn-back" onclick="location.href='list-view.html'"><i class="fa-solid fa-arrow-left"></i> Back to shop</button>
+        <button class="btn-remove-all">Remove all</button>
+      </div>
+
+      <div class="trust-badges">
+        <div class="trust-item"><i class="fa-solid fa-lock"></i><div><h4>Secure payment</h4><p>Have you ever finally just</p></div></div>
+        <div class="trust-item"><i class="fa-regular fa-comment-dots"></i><div><h4>Customer support</h4><p>Have you ever finally just</p></div></div>
+        <div class="trust-item"><i class="fa-solid fa-truck"></i><div><h4>Free delivery</h4><p>Have you ever finally just</p></div></div>
+      </div>
+
+      <div class="saved-section">
+        <h3>Saved for later</h3>
+        <div class="saved-grid">
+          <div class="saved-card"><a href="product-detail.html"><img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&q=80"></a><div class="saved-card-body"><p class="price">$99.50</p><p>GoPro HERO6 4K Action Camera - Black</p><button class="btn-move" onclick="location.href='cart.html'"><i class="fa-solid fa-cart-shopping"></i> Move to cart</button></div></div>
+          <div class="saved-card"><img src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=300&q=80"><div class="saved-card-body"><p class="price">$99.50</p><p>GoPro HERO6 4K Action Camera - Black</p><button class="btn-move"><i class="fa-solid fa-cart-shopping"></i> Move to cart</button></div></div>
+          <div class="saved-card"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=80"><div class="saved-card-body"><p class="price">$99.50</p><p>GoPro HERO6 4K Action Camera - Black</p><button class="btn-move"><i class="fa-solid fa-cart-shopping"></i> Move to cart</button></div></div>
+          <div class="saved-card"><img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&q=80"><div class="saved-card-body"><p class="price">$99.50</p><p>GoPro HERO6 4K Action Camera - Black</p><button class="btn-move"><i class="fa-solid fa-cart-shopping"></i> Move to cart</button></div></div>
+        </div>
+      </div>
+
+      <div class="promo-banner">
+        <div><h3>Super discount on more than 100 USD</h3><p>Have you ever finally just write dummy info</p></div>
+        <button class="btn-shop-now" onclick="location.href='list-view.html'">Shop now</button>
+      </div>
+    </div>
+
+    <div class="cart-sidebar">
+      <div class="order-summary">
+        <p style="font-size:13px;font-weight:600;margin-bottom:10px;">Have a coupon?</p>
+        <div class="coupon-row">
+          <input type="text" placeholder="Add coupon">
+          <button class="btn-apply">Apply</button>
+        </div>
+        <hr class="summary-divider">
+        <div class="summary-row"><span>Subtotal:</span><span>$1403.97</span></div>
+        <div class="summary-row discount"><span>Discount:</span><span>- $60.00</span></div>
+        <div class="summary-row tax"><span>Tax:</span><span>+ $14.00</span></div>
+        <hr class="summary-divider">
+        <div class="summary-total"><span>Total:</span><span>$1357.97</span></div>
+        <button class="btn-checkout">Checkout</button>
+        <div class="payment-icons">
+          <i class="fa-brands fa-cc-amex"></i>
+          <i class="fa-brands fa-cc-mastercard"></i>
+          <i class="fa-brands fa-cc-paypal"></i>
+          <i class="fa-brands fa-cc-visa"></i>
+          <i class="fa-brands fa-apple-pay"></i>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" style="text-decoration:none;display:flex;align-items:center;gap:8px;margin-bottom:10px;"><i class="fa-solid fa-store" style="font-size:20px;color:#0d6efd;"></i><span style="font-weight:700;color:#0d6efd;">Brand</span></a>
+      <p style="font-size:12px;color:#888;margin-bottom:12px;">Best information about the company<br>gies here but now lorem ipsum is</p>
+      <div class="social-icons"><i class="fa-brands fa-facebook-f"></i><i class="fa-brands fa-twitter"></i><i class="fa-brands fa-linkedin-in"></i><i class="fa-brands fa-instagram"></i><i class="fa-brands fa-youtube"></i></div>
+    </div>
+    <div class="footer-col"><h3>About</h3><ul><li>About Us</li><li>Find store</li><li>Categories</li><li>Blogs</li></ul></div>
+    <div class="footer-col"><h3>Partnership</h3><ul><li>About Us</li><li>Find store</li><li>Categories</li><li>Blogs</li></ul></div>
+    <div class="footer-col"><h3>Information</h3><ul><li>Help Center</li><li>Money Refund</li><li>Shipping</li><li>Contact us</li></ul></div>
+    <div class="footer-col"><h3>For users</h3><ul><li>Login</li><li>Register</li><li>Settings</li><li>My Orders</li></ul></div>
+    <div class="footer-col"><h3>Get app</h3><div class="app-badge"><i class="fa-brands fa-apple"></i> App Store</div><div class="app-badge"><i class="fa-brands fa-google-play"></i> Google Play</div></div>
+  </div>
+  <div class="footer-bottom"><div class="container" style="display:flex;justify-content:space-between;"><p style="font-size:13px;color:#888;">© 2023 Ecommerce.</p><div style="font-size:13px;color:#555;display:flex;align-items:center;gap:5px;"><img src="https://flagcdn.com/w20/us.png" style="height:13px;"> English ▲</div></div></div>
+</footer>
+</body>
+</html>
